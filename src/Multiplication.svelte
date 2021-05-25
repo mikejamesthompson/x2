@@ -2,6 +2,7 @@
 	import { fade, fly } from 'svelte/transition';
 	import shuffle from './shuffle';
   import Keypad from './Keypad.svelte';
+	import Operation from './Operation.svelte';
 	
 	export let numbers; // Which times tables we're doing
 	export let reset;
@@ -10,15 +11,29 @@
 
 	let pairs = [];
 	numbers.forEach((n) => {
-		pairs = pairs.concat(
-			multipliers.map((m) => [m + 1, n])
-		);
+		let multiplications = multipliers.map((m) => {
+			return {
+				multiplier: m + 1,
+				base: n,
+				operation: '×'
+			}
+		});
+		multiplications = shuffle(multiplications);
+		let divisions = [];
+		multiplications.slice(0, Math.floor(multipliers.length/2)).forEach((e) => {
+			divisions.push({
+				...e,
+				operation: '÷'
+			});
+		});
+		pairs = pairs.concat(multiplications).concat(divisions);
 	});
 	pairs = shuffle(pairs);
 	
 	let right = 0;
 	let wrong = 0;
 	let i = 0;
+	let wrongAnswers = [];
 	
 	let answer = '';
 	let lastAnswerWrong = null;
@@ -28,10 +43,8 @@
   function pressKey(num) {
     if (!isNaN(parseInt(num))) {
       answer = answer + num;
-    // Handle backspace
     } else if (num === 'Backspace') {
       if (answer.length > 0) answer = answer.slice(0, -1);
-    // Handle enter
     } else if (num === 'Enter') {
       check();
     } else {
@@ -44,16 +57,23 @@
   }
 	
 	function check() {
-		const correct = parseInt(answer) == (pairs[i][0] * pairs[i][1])
+		const correctAnswer = pairs[i].operation === '×' 
+			? pairs[i].multiplier * pairs[i].base
+			: pairs[i].multiplier
+
+		const correct = parseInt(answer) === correctAnswer;
+
 		if (correct) {
 			right += 1;
-			i += 1;
 			lastAnswerWrong = false;
 		} else {
 			wrong += 1;
 			lastAnswerWrong = true;
+			wrongAnswers.push(pairs[i]);
 			setTimeout(() => lastAnswerWrong = null, 500);
 		}
+		
+		i += 1;
 		answer = '';
 	}
 </script>
@@ -76,7 +96,9 @@
 		
 		<p class="question">
 			{#key i}
-				<strong in:fly="{{ y: -50, duration: 500 }}" out:fade|local>{pairs[i][0]} × {pairs[i][1]}</strong>
+				<strong in:fly="{{ y: -50, duration: 500 }}" out:fade|local>
+					<Operation pair={pairs[i]} includeAnswer={false} />
+				</strong>
 			{/key}
 		</p>
     
@@ -90,7 +112,15 @@
 	{:else}
 		<h2>All done!</h2>
 		<div class="results">
-			<p>😺 {right}&nbsp;&nbsp;&nbsp;😿 {wrong}</p>
+			<p class="results__headline">😺 {right}&nbsp;&nbsp;&nbsp;😿 {wrong}</p>
+			{#if wrongAnswers.length > 0}
+				<p>Here's where you tripped up:</p>
+				<ul class="results__list">
+				{#each wrongAnswers as w}
+					<li><Operation pair={w} includeAnswer={true} /></li>
+				{/each}
+				</ul>
+			{/if}
 		</div>
 
 		<form on:submit|preventDefault={reset}>
@@ -168,13 +198,24 @@
 	.results {
 		background: #f6f6f6;
 		border-radius: 6px;
+		font-size: 1.4rem;
 		margin: 2rem 0 1rem;
 		min-height: 2rem;
 		padding: 2rem 0;
 	}
 	
-	.results p {
+	.results__headline {
 		font-size: 2rem;
+	}
+
+	.results__list {
+		margin: 0;
+		padding: 0;
+	}
+
+	.results__list li {
+		display: block;
+		margin: 0.5em;
 	}
 	
 	.shake {
