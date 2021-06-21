@@ -1,13 +1,13 @@
 <script>
 	import { fade } from 'svelte/transition';
 	import Multiplication from './Multiplication.svelte';
-	
+
 	let numbers = []
-	let numberChoices = [2,3,4,5,6,7,8,9,10,11,12,14]
+	let numberChoices = [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
 	let play = false;
-	
+
 	const start = () => play = true;
-	
+
 	function reset() {
 		numbers = [];
 		play = false;
@@ -41,20 +41,20 @@
 {/if}
 
 <style>
-	
+
 	.container {
 		margin: 0 auto;
 		max-width: 400px;
 		text-align: center
 	}
-	
+
 	.options {
 		display: flex;
 		flex-wrap: wrap;
     margin: 0;
     padding: 0;
 	}
-	
+
 	.option {
 		background: #f6f6f6;
 		border: 1px solid #ddd;
@@ -85,7 +85,7 @@
     background-color: #dbd6d7;
     font-weight: bold;
   }
-	
+
 	.btn {
 		background: #FF004E;
 		border: 0;
@@ -97,9 +97,9 @@
 		padding: 0.75em;
 		width: 100%;
 	}
-	
+
 	.btn[disabled] {
 		opacity: 0.2
 	}
-	
+
 </style>

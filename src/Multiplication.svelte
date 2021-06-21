@@ -3,10 +3,10 @@
 	import shuffle from './shuffle';
   import Keypad from './Keypad.svelte';
 	import Operation from './Operation.svelte';
-	
+
 	export let numbers; // Which times tables we're doing
 	export let reset;
-	
+
 	let multipliers = Array.from(Array(12).keys());
 
 	let pairs = [];
@@ -29,12 +29,12 @@
 		pairs = pairs.concat(multiplications).concat(divisions);
 	});
 	pairs = shuffle(pairs);
-	
+
 	let right = 0;
 	let wrong = 0;
 	let i = 0;
 	let wrongAnswers = [];
-	
+
 	let answer = '';
 	let lastAnswerWrong = null;
   let pressedKey = null;
@@ -55,9 +55,9 @@
     if (typeof keypadTimeoutID === 'number') clearTimeout(keypadTimeoutID);
     keypadTimeoutID = setTimeout(() => pressedKey = null, 200);
   }
-	
+
 	function check() {
-		const correctAnswer = pairs[i].operation === '×' 
+		const correctAnswer = pairs[i].operation === '×'
 			? pairs[i].multiplier * pairs[i].base
 			: pairs[i].multiplier
 
@@ -72,7 +72,7 @@
 			wrongAnswers.push(pairs[i]);
 			setTimeout(() => lastAnswerWrong = null, 500);
 		}
-		
+
 		i += 1;
 		answer = '';
 	}
@@ -93,7 +93,7 @@
 				<span class="counter">😿 {wrong}</span>
 			</p>
 		</div>
-		
+
 		<p class="question">
 			{#key i}
 				<strong in:fly="{{ y: -50, duration: 500 }}" out:fade|local>
@@ -101,11 +101,11 @@
 				</strong>
 			{/key}
 		</p>
-    
+
     <p class="answer" class:shake={lastAnswerWrong} tabindex="0" autofocus on:keydown={(e) => pressKey(e.key)}>
       {#if answer}{answer}{:else}<em>Type your answer</em>{/if}
     </p>
-		
+
 		<Keypad {pressedKey} {pressKey} />
 
 		<p><a href="/" on:click|preventDefault={reset}>Leave</a></p>
@@ -130,14 +130,14 @@
 </div>
 
 <style>
-	
+
 	.btn, .answer {
 		border-radius: 6px;
 		display:block;
 		padding: 0.75em;
 		width: 100%;
 	}
-	
+
 	.btn {
 		background: #FF004E;
 		border: 0;
@@ -145,7 +145,7 @@
 		cursor: pointer;
 		font-weight: bold;
 	}
-	
+
 	.answer {
     border: 2px solid #eee;
     box-sizing: border-box;
@@ -155,29 +155,29 @@
   .answer:focus {
     border-color: #FF004E;
   }
-	
+
 	.container {
 		margin: 0 auto;
 		max-width: 400px;
 		position: relative;
 		text-align: center
 	}
-	
+
 	.stats {
 		display: flex;
     font-size: 1.2rem;
 		justify-content: space-between;
 		width: 100%;
 	}
-	
+
 	.stats p {
 		margin: 0
 	}
-	
+
 	.counter:last-of-type {
 		margin-left: 1rem;
 	}
-	
+
 	.question {
 		border-radius: 6px;
 		font-size: 2rem;
@@ -186,7 +186,7 @@
 		padding: 1rem 0;
 		position: relative;
 	}
-	
+
 	.question strong {
 		position: absolute;
 		left: 50%;
@@ -194,7 +194,7 @@
     transform: translate(-50%, -50%);
 		width: 100%;
 	}
-	
+
 	.results {
 		background: #f6f6f6;
 		border-radius: 6px;
@@ -203,7 +203,7 @@
 		min-height: 2rem;
 		padding: 2rem 0;
 	}
-	
+
 	.results__headline {
 		font-size: 2rem;
 	}
@@ -217,9 +217,9 @@
 		display: block;
 		margin: 0.5em;
 	}
-	
+
 	.shake {
-		 animation: shake 0.3s; 
+		 animation: shake 0.3s;
 		 animation-iteration-count: 2;
      border-color: #FF004E;
      box-shadow: 0px 2px 12px rgba(255,0,78,0.4);
@@ -233,5 +233,5 @@
 		 80% { transform: translate(-1px, -1px) rotate(1deg); }
 		 100% { transform: translate(1px, -2px) rotate(-1deg); }
 	 }
-	
+
 </style>
