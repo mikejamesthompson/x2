@@ -1,6 +1,7 @@
 <script>
+	import { afterUpdate } from 'svelte';
 	import { fade, fly } from 'svelte/transition';
-	import shuffle from './shuffle';
+	import shuffle from '../helpers/shuffle';
   import Keypad from './Keypad.svelte';
 	import Operation from './Operation.svelte';
 
@@ -39,6 +40,25 @@
 	let lastAnswerWrong = null;
   let pressedKey = null;
   let keypadTimeoutID = null;
+
+	let stats = JSON.parse(localStorage.getItem('x2_stats') || '[]');
+	let savedResults = false;
+
+	afterUpdate(() => {
+		if (savedResults) return;
+		if (i === pairs.length) {
+			const now = new Date();
+			stats.push({
+				date: now.toUTCString(),
+				numbers,
+				right,
+				wrong,
+				wrongAnswers,
+			});
+			localStorage.setItem('x2_stats', JSON.stringify(stats));
+			savedResults = true;
+		}
+	});
 
   function pressKey(num) {
     if (!isNaN(parseInt(num))) {
