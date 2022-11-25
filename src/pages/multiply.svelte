@@ -18,7 +18,7 @@
 {#if !play}
 	<div class="container" in:fade>
 		<h2>Practise your times tables</h2>
-    <p>Which times tables do you want practise?</p>
+    <p>Which times tables do you want to practise?</p>
 
 		<form on:submit|preventDefault={start}>
 			<ol class="options">
