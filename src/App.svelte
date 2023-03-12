@@ -1,6 +1,7 @@
 <script>
   import page from 'page';
 
+  import Base from "./pages/base.svelte";
   import multiply from "./pages/multiply.svelte";
   import stats from "./pages/stats.svelte";
 
@@ -15,4 +16,4 @@
 
 </script>
 
-<svelte:component this={current} />
+<Base page={current} />
