@@ -2,7 +2,7 @@
   export let pair;
   export let includeAnswer;
 
-  const answer = pair.operation === "×" 
+  const answer = pair.operation === "×"
     ? pair.multiplier * pair.base
     : pair.multiplier
 </script>

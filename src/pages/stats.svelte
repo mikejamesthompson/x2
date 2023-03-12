@@ -1,6 +1,6 @@
 <script>
   import { fade } from 'svelte/transition';
-	import { onMount } from 'svelte';
+  import { onMount } from 'svelte';
   let stats = [];
 
   onMount(() => {
